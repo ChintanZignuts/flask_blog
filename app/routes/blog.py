@@ -20,10 +20,8 @@ def create_blog():
     if not data.get("title") or not data.get("content"):
         return jsonify({"error": "Title and content are required"}), 400
 
-    # Use provided slug if available; otherwise, generate one
     slug = data.get("slug") or slugify(data["title"], lowercase=True, separator="-")
 
-    # Check if the slug already exists to prevent duplicates
     if BlogPost.query.filter_by(slug=slug).first():
         return jsonify({"error": "Slug already exists, please choose a different one"}), 409
 
@@ -108,7 +106,6 @@ def update_blog(blog_id):
     db.session.commit()
     return jsonify({"message": "Blog post updated successfully"})
 
-# 🗑️ Delete a blog post (only author or admin can delete)
 @blog_bp.route("/delete/<int:blog_id>", methods=["DELETE"])
 @jwt_required()
 def delete_blog(blog_id):
